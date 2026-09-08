@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Learner {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  attempts Attempt[]
+}
+
+model Problem {
+  id           String   @id @default(uuid())
+  title        String
+  slug         String   @unique
+  description  String
+  requirements String
+  difficulty   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  attempts Attempt[]
+}
+
+enum AttemptStatus {
+  IN_PROGRESS
+  SUBMITTED
+  COMPLETED
+}
+
+model Attempt {
+  id          String        @id @default(uuid())
+  learnerId   String
+  problemId   String
+  status      AttemptStatus @default(IN_PROGRESS)
+
+  startedAt   DateTime  @default(now())
+  submittedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  learner    Learner    @relation(fields: [learnerId], references: [id])
+  problem    Problem    @relation(fields: [problemId], references: [id])
+  submission Submission?
+}
+
+enum SubmissionFormat {
+  TEXT
+  CODE
+}
+
+model Submission {
+  id          String           @id @default(uuid())
+  attemptId   String           @unique
+  format      SubmissionFormat
+  content     String
+
+  submittedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  attempt Attempt @relation(fields: [attemptId], references: [id])
+
+  feedback Feedback?
+}
+
+enum FeedbackStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum EvaluatorType {
+  RULE_BASED
+  LLM
+}
+
+model Feedback {
+  id           String         @id @default(uuid())
+  submissionId String         @unique
+
+  status       FeedbackStatus @default(PENDING)
+  evaluator    EvaluatorType
+
+  score        Float?
+  summary      String?
+  strengths    String?
+  issues       String?
+  suggestions  String?
+  reasoning    String?
+
+  errorMessage String?
+  evaluatedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  submission Submission @relation(fields: [submissionId], references: [id])
+}
