@@ -1,10 +1,24 @@
+import Navbar from './components/Navbar'
+import { Routes, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import MyAttampts from './pages/MyAttampts'
+import ProblemDetail from './pages/ProblemDetail'
+import Problems from './pages/Problems'
+import AttemptDetail from './pages/AttemptDetail'
 
 function App() {
 
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/problems" element={<Problems />} />
+        <Route path="/problem/:id" element={<ProblemDetail />} />
+        <Route path="/my-attempts" element={<MyAttampts />} />
+        <Route path="/attempt/:id" element={<AttemptDetail />} />
+      </Routes>
+    </>
   )
 }
 
