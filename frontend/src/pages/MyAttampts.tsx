@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAttemptsByLearnerId } from "../services/attemptService";
+import { useLearner } from "../context/learnerContext";
 
 interface Attempt {
   id: string;
@@ -13,9 +14,13 @@ interface Attempt {
     title: string;
     difficulty: string;
   };
+  submission: {
+    feedback: {
+      score: number | null;
+      status: string;
+    } | null;
+  } | null;
 }
-
-const LEARNER_ID = "6b840175-dfc4-49a9-bebf-c7bea72ed015";
 
 const statusStyles: Record<string, string> = {
   IN_PROGRESS: "bg-coral/15 text-coral",
@@ -25,14 +30,17 @@ const statusStyles: Record<string, string> = {
 
 const MyAttampts = () => {
   const navigate = useNavigate();
+  const { learner } = useLearner();
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   const fetchAttempts = async () => {
+    if (!learner) return;
+
     try {
       setLoading(true);
-      const data = await getAttemptsByLearnerId(LEARNER_ID);
+      const data = await getAttemptsByLearnerId(learner.id);
       setAttempts(data.attempts);
     } catch (err) {
       console.error(err);
@@ -44,7 +52,7 @@ const MyAttampts = () => {
 
   useEffect(() => {
     fetchAttempts();
-  }, []);
+  }, [learner]);
 
   if (loading) {
     return <div className="p-6 text-ink/70">Loading attempts...</div>;
@@ -86,13 +94,20 @@ const MyAttampts = () => {
               </p>
             </div>
 
-            <span
-              className={`px-3 py-1 rounded-full text-sm font-medium ${
-                statusStyles[attempt.status] ?? "bg-ink/10 text-ink"
-              }`}
-            >
-              {attempt.status}
-            </span>
+            <div className="flex items-center gap-3">
+              {attempt.submission?.feedback?.score != null && (
+                <span className="font-semibold text-ocean">
+                  {attempt.submission.feedback.score}/100
+                </span>
+              )}
+              <span
+                className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  statusStyles[attempt.status] ?? "bg-ink/10 text-ink"
+                }`}
+              >
+                {attempt.status}
+              </span>
+            </div>
           </div>
         ))}
       </div>

@@ -28,3 +28,14 @@ export const getAttemptsByLearnerId = async (
 
     return response.data;
 };
+
+export const getAttemptsByLearnerAndProblem = async (
+    learnerId: string,
+    problemId: string
+) => {
+    const response = await api.get(
+        `/attempts/learners/${learnerId}/problems/${problemId}`
+    );
+
+    return response.data;
+};

@@ -64,8 +64,41 @@ export const getAttemptsByLearnerIdController = async (req: Request, res: Respon
             where: { learnerId },
             include: {
                 problem: true,
+                submission: {
+                    include: {
+                        feedback: true,
+                    },
+                },
             },
             orderBy: { createdAt: "desc" },
+        });
+        res.json({ message: "Attempts found", attempts });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+export const getAttemptsByLearnerAndProblemController = async (req: Request, res: Response) => {
+    try {
+        const { learnerId, problemId } = req.params;
+
+        if (typeof learnerId !== "string" || typeof problemId !== "string") {
+            res.status(400).json({
+                message: "Invalid learner or problem id",
+            });
+            return;
+        }
+
+        const attempts = await prisma.attempt.findMany({
+            where: { learnerId, problemId },
+            include: {
+                problem: true,
+                submission: {
+                    include: {
+                        feedback: true,
+                    },
+                },
+            },
+            orderBy: { createdAt: "asc" },
         });
         res.json({ message: "Attempts found", attempts });
     } catch (error) {

@@ -1,5 +1,8 @@
 import type { Request, Response } from "express";
 import { prisma } from "../db/db.js";
+import { evaluationService } from "../evaluation/EvaluationService.js";
+
+const VALID_FORMATS = ["TEXT", "CODE"];
 
 export const createSubmissionController = async (
   req: Request,
@@ -11,6 +14,12 @@ export const createSubmissionController = async (
     if (!attemptId || !format || !content) {
       return res.status(400).json({
         message: "attemptId, format and content are required",
+      });
+    }
+
+    if (!VALID_FORMATS.includes(format)) {
+      return res.status(400).json({
+        message: "format must be one of TEXT or CODE",
       });
     }
 
@@ -38,12 +47,23 @@ export const createSubmissionController = async (
       },
     });
 
+    await prisma.feedback.create({
+      data: {
+        submissionId: submission.id,
+        evaluator: "RULE_BASED",
+      },
+    });
+
     await prisma.attempt.update({
       where: { id: attemptId },
       data: {
         status: "SUBMITTED",
         submittedAt: new Date(),
       },
+    });
+
+    evaluationService.evaluateSubmission(submission.id).catch((error) => {
+      console.error("Evaluation failed:", error);
     });
 
     return res.status(201).json({

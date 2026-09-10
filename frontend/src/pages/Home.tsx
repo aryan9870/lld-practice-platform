@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getProblems } from "../services/problemService";
 import { getAttemptsByLearnerId } from "../services/attemptService";
 import ProblemCard from "../components/ProblemCard";
+import { useLearner } from "../context/learnerContext";
 import type { Problem } from "../types";
 
 interface Attempt {
@@ -17,8 +18,6 @@ interface Attempt {
   };
 }
 
-const LEARNER_ID = "6b840175-dfc4-49a9-bebf-c7bea72ed015";
-
 const statusStyles: Record<string, string> = {
   IN_PROGRESS: "bg-coral/15 text-coral",
   SUBMITTED: "bg-ocean/15 text-ocean",
@@ -27,15 +26,18 @@ const statusStyles: Record<string, string> = {
 
 const Home = () => {
   const navigate = useNavigate();
+  const { learner } = useLearner();
 
   const [problems, setProblems] = useState<Problem[]>([]);
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
+    if (!learner) return;
+
     try {
       const problemsData = await getProblems();
-      const attemptsData = await getAttemptsByLearnerId(LEARNER_ID);
+      const attemptsData = await getAttemptsByLearnerId(learner.id);
 
       setProblems(problemsData.problems ?? []);
       setAttempts(attemptsData.attempts ?? []);
@@ -48,7 +50,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [learner]);
 
   return (
     <div>

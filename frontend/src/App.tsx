@@ -5,11 +5,16 @@ import MyAttampts from './pages/MyAttampts'
 import ProblemDetail from './pages/ProblemDetail'
 import Problems from './pages/Problems'
 import AttemptDetail from './pages/AttemptDetail'
+import { LearnerProvider } from './context/LearnerProvider'
+import { useLearner } from './context/learnerContext'
+import AuthModal from './components/AuthModal'
 
-function App() {
+function AppContent() {
+  const { learner } = useLearner();
 
   return (
     <>
+      {!learner && <AuthModal />}
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -19,6 +24,14 @@ function App() {
         <Route path="/attempts/:id" element={<AttemptDetail />} />
       </Routes>
     </>
+  )
+}
+
+function App() {
+  return (
+    <LearnerProvider>
+      <AppContent />
+    </LearnerProvider>
   )
 }
 
