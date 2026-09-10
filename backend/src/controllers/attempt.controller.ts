@@ -27,8 +27,23 @@ export const getAttemptByIdController = async (req: Request, res: Response) => {
         }
         
         const attempt = await prisma.attempt.findUnique({
-            where: { id }
+            where: {
+                id,
+            },
+            include: {
+                problem: true,
+                learner: true,
+                submission: true,
+            },
         });
+
+        if (!attempt) {
+            res.status(404).json({
+                message: "Attempt not found",
+            });
+            return;
+        }
+        
         res.json({ message: "Attempt found", attempt });
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });

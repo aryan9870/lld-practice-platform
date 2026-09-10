@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getProblemById } from "../services/problemService";
 import type { Problem } from "../types";
+import { createAttempt } from "../services/attemptService";
 
 const ProblemDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,6 +24,27 @@ const ProblemDetail = () => {
       console.error(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleStartAttempt = async () => {
+    if (!problem) return;
+
+    try {
+        // Temporary learner ID
+        // Baad me Context se actual learner ID lenge
+        const learnerId = "6b840175-dfc4-49a9-bebf-c7bea72ed015";
+
+        const data = await createAttempt(
+            learnerId,
+            problem.id
+        );
+
+        console.log("Attempt created:", data);
+
+        navigate(`/attempts/${data.attempt.id}`);
+    } catch (error) {
+        console.error("Failed to create attempt:", error);
     }
   };
 
@@ -96,10 +118,7 @@ const ProblemDetail = () => {
 
       {/* Start Attempt */}
       <button
-        onClick={() => {
-          // later we will create an attempt here
-          console.log("Start attempt for:", problem.id);
-        }}
+        onClick={handleStartAttempt}
         className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
       >
         Start Attempt
