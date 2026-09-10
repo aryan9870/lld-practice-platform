@@ -61,7 +61,11 @@ export const getAttemptsByLearnerIdController = async (req: Request, res: Respon
         }
         
         const attempts = await prisma.attempt.findMany({
-            where: { learnerId }
+            where: { learnerId },
+            include: {
+                problem: true,
+            },
+            orderBy: { createdAt: "desc" },
         });
         res.json({ message: "Attempts found", attempts });
     } catch (error) {

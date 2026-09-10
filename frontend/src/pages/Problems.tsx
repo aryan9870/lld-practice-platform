@@ -32,7 +32,7 @@ const Problems = () => {
 
   return (
     <div className="problems-container px-20">
-      <h1 className="text-2xl font-semibold mb-4 text-center my-10">Problems</h1>
+      <h1 className="text-2xl font-semibold mb-4 text-center my-10 text-ink">Problems</h1>
       <div className="problem-list flex gap-20 items-center justify-center flex-wrap">
       {problems.map((problem) => (
         <ProblemCard key={problem.id} id={problem.id} title={problem.title} description={problem.description} />

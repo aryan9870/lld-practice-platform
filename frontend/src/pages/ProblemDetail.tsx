@@ -77,14 +77,14 @@ const ProblemDetail = () => {
             {problem.title}
           </h1>
 
-          <span className="inline-block mt-2 px-4 py-1 rounded-full bg-gray-200 text-sm">
+          <span className="inline-block mt-2 px-4 py-1 rounded-full bg-ocean/10 text-ocean text-sm font-medium">
             {problem.difficulty}
           </span>
         </div>
 
         <button
           onClick={() => navigate("/problems")}
-          className="px-4 py-1.5 border-2 rounded-lg hover:bg-gray-100 border-gray-400 cursor-pointer"
+          className="px-4 py-1.5 border-2 rounded-lg hover:bg-ink/5 border-ink/20 text-ink cursor-pointer"
         >
           Back
         </button>
@@ -119,7 +119,7 @@ const ProblemDetail = () => {
       {/* Start Attempt */}
       <button
         onClick={handleStartAttempt}
-        className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
+        className="px-6 py-3 bg-coral text-white rounded-lg hover:bg-coral/90 cursor-pointer"
       >
         Start Attempt
       </button>

@@ -106,7 +106,7 @@ const AttemptDetail = () => {
                     </label>
 
                     <select
-                        className="border border-gray-400 rounded-sm px-3 py-1.5"
+                        className="border border-ink/20 rounded-lg px-3 py-1.5 bg-white"
                     >
                         <option value="TEXT">Text</option>
                         <option value="MARKDOWN">Markdown</option>
@@ -123,7 +123,7 @@ const AttemptDetail = () => {
                     <textarea
                         placeholder="Write your solution here..."
                         rows={15}
-                        className="w-full border border-gray-400 rounded-sm p-4 resize-y"
+                        className="w-full border border-ink/20 rounded-lg p-4 resize-y bg-white"
                     />
 
                 </div>
@@ -133,7 +133,7 @@ const AttemptDetail = () => {
 
                     <button
                         type="submit"
-                        className="border py-2 px-5 rounded-sm disabled:opacity-50 cursor-pointer"
+                        className="bg-coral text-white py-2 px-5 rounded-lg hover:bg-coral/90 disabled:opacity-50 cursor-pointer"
                     >
                         Submit Solution
                     </button>

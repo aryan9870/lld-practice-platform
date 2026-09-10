@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+@theme {
+  --color-cream: #f5ebdd;
+  --color-coral: #f2765e;
+  --color-ocean: #315b8c;
+  --color-ink: #413333;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+}
